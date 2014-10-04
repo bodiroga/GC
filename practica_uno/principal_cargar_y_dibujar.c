@@ -140,6 +140,8 @@ int main(int argc, char** argv) {
 	printf("Este programa carga un objeto \n");
 	printf("y lo dibuja en pantalla \n");
 	printf("Pulsar <c> para cargar un objeto\n");
+	printf("Pulsar <m> para cambiar el color del objeto seleccionado\n");
+	printf("Pulsar <TAB> para seleccionar un objeto\n");
 	printf("Pulsar <ESC> para finalizar\n");
 		
 	glutInit(&argc,argv);
