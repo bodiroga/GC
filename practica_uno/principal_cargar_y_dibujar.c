@@ -4,10 +4,11 @@
 #include <time.h>
 #include <GL/glut.h>
 #include "definicion.h"
+#include "ruta.h"
+#include "variablesGlobales.h"
 
 int lecturaObjeto(char * , OBJETO * );
-void dibuja(void);
-void dibuja_un_objeto(OBJETO *);
+void redimensionar();
 void actualizar_medidas_escena(OBJETO *);
 void clipping();
 void cargaObjeto();
@@ -21,14 +22,13 @@ struct NODO * nodo_aux = NULL;
 static float	LOCAL_RED = 0.5f;
 static float	LOCAL_GREEN = 0.5f;
 static float	LOCAL_BLUE = 0.5f;
-static float	SELECTED_RED = 1.0f;
-static float	SELECTED_GREEN = 0.0f;
-static float	SELECTED_BLUE = 0.0f;
-static int		ANCHO = 500, ALTO = 500, color = 0;
-float			min_x, min_y, min_z, max_x, max_y, max_z;
+float	SELECTED_RED = 1.0f;
+float	SELECTED_GREEN = 0.0f;
+float	SELECTED_BLUE = 0.0f;
+int		ANCHO = 500, ALTO = 500;
+int		color = 0;
 
-static void teclado (unsigned char key, int x, int y)
-{
+static void teclado (unsigned char key, int x, int y) {
 	// This function will be called whenever the user pushes one key
 	switch(key) {
 		case 'c': 
@@ -50,53 +50,7 @@ static void teclado (unsigned char key, int x, int y)
 	glutPostRedisplay();
 }
 
-void redimensionar(int w, int h) {
 
-	glViewport( 0, 0, w, h); 
-	ANCHO=w;
-	ALTO=h;
-
-}
-
-void actualizar_medidas_escena(OBJETO * objeto) {
-
-	if (objeto->min.x < min_x) min_x = objeto->min.x;
-	if (objeto->min.y < min_y) min_y = objeto->min.y;
-	if (objeto->min.z < min_z) min_z = objeto->min.z;
-	if (objeto->max.x > max_x) max_x = objeto->max.x;
-	if (objeto->max.y > max_y) max_y = objeto->max.y;
-	if (objeto->max.z > max_z) max_z = objeto->max.z;
-
-}
-
-void clipping() {
-
-	float left, right, top, bottom, near, far, tan_alpha, tan_beta;
-
-	left = min_x;
-	right = max_x;
-	bottom = min_y;
-	top = max_y;
-	near = min_z;
-	far = max_z;
-
-	tan_alpha = (top-bottom)/(right-left);
-	tan_beta = (ALTO*1.0)/(ANCHO*1.0);
-
-	if(tan_beta < tan_alpha) {
-		left *= tan_alpha/tan_beta;
-		right *= tan_alpha/tan_beta;
-	} else {
-		bottom *= tan_beta/tan_alpha;
-		top *= tan_beta/tan_alpha;
-	}
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	glOrtho(left, right, bottom, top, near, far);
-
-}
 
 void dibuja_un_objeto(OBJETO * mi_objeto) {
 
@@ -140,18 +94,19 @@ void dibuja(void) {
 
 void cargaObjeto() {
 
-	char ruta[150]= "Objetos/";
 	char nombreFigura[20];
+	char rutaObjeto[150] = "";
 	struct OBJETO * objeto_aux;
 
 	printf("Cargar figura (*.obj): ");
 	scanf("%s", nombreFigura);
 	fflush(stdin);
-	strcat(ruta, nombreFigura);
+	strcat(rutaObjeto, ruta);
+	strcat(rutaObjeto, nombreFigura);
 	
 	objeto_aux = (OBJETO *)malloc(sizeof(OBJETO));
 
-	if (lecturaObjeto(ruta, objeto_aux) == 0) {
+	if (lecturaObjeto(rutaObjeto, objeto_aux) == 0) {
 		printf("Objeto leido\n");
 
 		// Reservamos memoria para el nodo_aux, que ser� el que haga de puente
@@ -179,32 +134,6 @@ void seleccionaObjeto() {
 	
 }
 
-void cambiaColor() {
-
-	if (color == 7) color = 0; else color++;
-
-	switch (color) {
-		case 0: // Rojo
-			SELECTED_RED = 1.0f; SELECTED_GREEN = 0.0f; SELECTED_BLUE = 0.0f; break;
-		case 1: // Naranja
-			SELECTED_RED = 1.0f; SELECTED_GREEN = 0.5f; SELECTED_BLUE = 0.0f; break;
-		case 2: // Verde
-			SELECTED_RED = 0.0f; SELECTED_GREEN = 1.0f; SELECTED_BLUE = 0.0f; break;
-		case 3: // Azul
-			SELECTED_RED = 0.0f; SELECTED_GREEN = 0.0f; SELECTED_BLUE = 3.0f; break;
-		case 4: // Amarillo
-			SELECTED_RED = 1.0f; SELECTED_GREEN = 1.0f; SELECTED_BLUE = 0.0f; break;
-		case 5: // Morado
-			SELECTED_RED = 1.0f; SELECTED_GREEN = 0.0f; SELECTED_BLUE = 1.0f; break;
-		case 6: // Azul claro
-			SELECTED_RED = 0.0f; SELECTED_GREEN = 1.0f; SELECTED_BLUE = 1.0f; break;
-		case 7: // Blanco
-			SELECTED_RED = 1.0f; SELECTED_GREEN = 1.0f; SELECTED_BLUE = 1.0f; break;
-		default:  // Rojo
-			SELECTED_RED = 1.0f; SELECTED_GREEN = 0.0f; SELECTED_BLUE = 0.0f; break;
-	}
-
-}
 
 int main(int argc, char** argv) {
 
