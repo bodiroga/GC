@@ -140,7 +140,7 @@ void dibuja(void) {
 
 void cargaObjeto() {
 
-	char ruta[150]= "./Objetos";
+	char ruta[150]= "Objetos/";
 	char nombreFigura[20];
 	struct OBJETO * objeto_aux;
 
