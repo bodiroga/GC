@@ -8,7 +8,7 @@
 #include "variablesGlobales.h"
 
 int lecturaObjeto(char * , OBJETO * );
-void redimensionar();
+void redimensionar(int w, int h);
 void actualizar_medidas_escena(OBJETO *);
 void clipping();
 void cargaObjeto();
@@ -152,7 +152,7 @@ int main(int argc, char** argv) {
 
 	glutDisplayFunc( dibuja );
 	glutKeyboardFunc( teclado );
-	glutReshapeFunc(redimensionar);
+	glutReshapeFunc( redimensionar );
 
 	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 
