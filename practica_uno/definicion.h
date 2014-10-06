@@ -5,6 +5,7 @@
 typedef struct NODO {
 				struct OBJETO * objeto;
 				struct NODO * siguiente;
+				float matriz[16];
 				} NODO;
 
 typedef struct {
