@@ -14,6 +14,7 @@ void clipping();
 void cargaObjeto();
 void seleccionaObjeto();
 void cambiaColor();
+void escalado(float r);
 
 struct NODO * primer_nodo = NULL ;
 struct NODO * nodo_actual = NULL;
@@ -25,7 +26,7 @@ static float	LOCAL_BLUE = 0.5f;
 float	SELECTED_RED = 1.0f;
 float	SELECTED_GREEN = 0.0f;
 float	SELECTED_BLUE = 0.0f;
-int		ANCHO = 500, ALTO = 500;
+int		ANCHO = 700, ALTO = 800;
 int		color = 0;
 
 static void teclado (unsigned char key, int x, int y) {
@@ -36,6 +37,12 @@ static void teclado (unsigned char key, int x, int y) {
 			break;
 		case 'm':
 			cambiaColor();
+			break;
+		case 43:
+			escalado(1.1f);
+			break;
+		case 45:
+			escalado(0.9f);
 			break;
 		case 9: // <TAB>
 			seleccionaObjeto();
@@ -66,6 +73,7 @@ void dibuja_un_objeto(OBJETO * mi_objeto) {
 	else
 		glColor3f(LOCAL_RED, LOCAL_GREEN, LOCAL_BLUE);
 
+
 	for (i = 0; i < mi_objeto->numeroCaras; i++) {
 		glBegin(GL_LINE_LOOP);
 		for (j = 0; j < mi_objeto->tablaCaras[i].numeroVertices; j++) {
@@ -86,6 +94,7 @@ void dibuja(void) {
 	if (primer_nodo != NULL) {
 		nodo_aux = primer_nodo;
 		do {
+			glLoadMatrixf(nodo_aux->matriz);
 			dibuja_un_objeto(nodo_aux->objeto);
 		} while ((nodo_aux = nodo_aux->siguiente) != NULL);
 	}
@@ -97,6 +106,7 @@ void cargaObjeto() {
 	char nombreFigura[20];
 	char rutaObjeto[150] = "";
 	struct OBJETO * objeto_aux;
+	int i = 0;
 
 	printf("Cargar figura (*.obj): ");
 	scanf("%s", nombreFigura);
@@ -115,6 +125,11 @@ void cargaObjeto() {
 		nodo_aux->objeto = objeto_aux;
 		nodo_aux->siguiente = primer_nodo;
 
+		for (i = 0; i < 16; i++)
+			nodo_aux->matriz[i] = 0;
+		for (i = 0; i < 16; i = i+5)
+			nodo_aux->matriz[i] = 1;
+
 		primer_nodo = nodo_aux;
 
 		actualizar_medidas_escena(objeto_aux);
@@ -132,6 +147,25 @@ void seleccionaObjeto() {
 	else
 		nodo_actual = nodo_actual->siguiente;
 	
+}
+
+void escalado(float r) {
+
+	if (nodo_actual != NULL) {
+		glLoadMatrixf(nodo_actual->matriz);
+		glScalef(r, r, r);
+		glGetFloatv(GL_MODELVIEW_MATRIX, nodo_actual->matriz);
+	}
+}
+
+void traslacion(float x, float y, float z) {
+
+	if (nodo_actual != NULL) {
+		glLoadMatrixf(nodo_actual->matriz);
+		glTranslatef(x, y, z);
+		glGetFloatv(GL_MODELVIEW_MATRIX, nodo_actual->matriz);
+	}
+
 }
 
 

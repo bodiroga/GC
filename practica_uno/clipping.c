@@ -60,7 +60,7 @@ void clipping() {
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
 	glOrtho(left, right, bottom, top, near, far);
+	glMatrixMode(GL_MODELVIEW);
 
 }
