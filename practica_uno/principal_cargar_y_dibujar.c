@@ -14,7 +14,10 @@ void clipping();
 void cargaObjeto();
 void seleccionaObjeto();
 void cambiaColor();
-void escalado(float r);
+void escalar(float r);
+void trasladar(float x, float y, float z);
+void rotar(float ang, float x, float y, float z);
+void reset();
 
 struct NODO * primer_nodo = NULL ;
 struct NODO * nodo_actual = NULL;
@@ -38,11 +41,50 @@ static void teclado (unsigned char key, int x, int y) {
 		case 'm':
 			cambiaColor();
 			break;
-		case 43:
-			escalado(1.1f);
+		case 'a':
+			trasladar(-1.0f,0.0f,0.0f);
 			break;
-		case 45:
-			escalado(0.9f);
+		case 'd':
+			trasladar(1.0f,0.0f,0.0f);
+			break;
+		case 'w':
+			trasladar(0.0f,1.0f,0.0f);
+			break;
+		case 's':
+			trasladar(0.0f,-1.0f,0.0f);
+			break;
+		case 'q':
+			trasladar(0.0f,0.0f,1.0f);
+			break;
+		case 'e':
+			trasladar(0.0f,0.0f,-1.0f);
+			break;
+		case 'f':
+			rotar(5.0f,-1.0f,0.0f,0.0f);
+			break;
+		case 'h':
+			rotar(5.0f,1.0f,0.0f,0.0f);
+		break;
+		case 't':
+			rotar(5.0f,0.0f,1.0f,0.0f);
+			break;
+		case 'g':
+			rotar(5.0f,0.0f,-1.0f,0.0f);
+			break;
+		case 'r':
+			rotar(5.0f,0.0f,0.0f,1.0f);
+			break;
+		case 'y':
+			rotar(5.0f,0.0f,0.0f,-1.0f);
+			break;
+		case '0':
+			reset();
+			break;
+		case 43: // <+>
+			escalar(1.1f);
+			break;
+		case 45: // <->
+			escalar(0.9f);
 			break;
 		case 9: // <TAB>
 			seleccionaObjeto();
@@ -132,6 +174,9 @@ void cargaObjeto() {
 
 		primer_nodo = nodo_aux;
 
+		if (nodo_actual == NULL)
+			nodo_actual = primer_nodo;
+
 		actualizar_medidas_escena(objeto_aux);
 
 	} else {
@@ -149,22 +194,41 @@ void seleccionaObjeto() {
 	
 }
 
-void escalado(float r) {
+void escalar(float r) {
 
-	if (nodo_actual != NULL) {
-		glLoadMatrixf(nodo_actual->matriz);
-		glScalef(r, r, r);
-		glGetFloatv(GL_MODELVIEW_MATRIX, nodo_actual->matriz);
-	}
+	glLoadMatrixf(nodo_actual->matriz);
+	glScalef(r, r, r);
+	glGetFloatv(GL_MODELVIEW_MATRIX, nodo_actual->matriz);
+
 }
 
-void traslacion(float x, float y, float z) {
+void trasladar(float x, float y, float z) {
 
-	if (nodo_actual != NULL) {
-		glLoadMatrixf(nodo_actual->matriz);
-		glTranslatef(x, y, z);
-		glGetFloatv(GL_MODELVIEW_MATRIX, nodo_actual->matriz);
-	}
+//	float tx, ty, tz, factor_x, factor_y, factor_z;
+//	tx = x*factor_x;
+//	ty = y*factor_y;
+//	tz = z*factor_z;
+//	factor_x = (max_x - min_x)*0.05f;
+//	factor_y = (max_y - min_y)*0.05f;
+//	factor_z = (max_z - min_z)*0.05f;
+	glLoadMatrixf(nodo_actual->matriz);
+	glTranslatef(x, y, z);
+	glGetFloatv(GL_MODELVIEW_MATRIX, nodo_actual->matriz);
+
+}
+
+void rotar(float ang, float x, float y, float z) {
+
+	glLoadMatrixf(nodo_actual->matriz);
+	glRotatef(ang, x, y, z);
+	glGetFloatv(GL_MODELVIEW_MATRIX, nodo_actual->matriz);
+
+}
+
+void reset() {
+
+	glLoadIdentity();
+	glGetFloatv(GL_MODELVIEW_MATRIX, nodo_actual->matriz);
 
 }
 
