@@ -8,6 +8,7 @@
 #include "variablesGlobales.h"
 
 int lecturaObjeto(char * , OBJETO * );
+void dibujaEjes();
 void redimensionar(int w, int h);
 void actualizar_medidas_escena(OBJETO *);
 void clipping();
@@ -141,6 +142,14 @@ void dibuja(void) {
 		} while ((nodo_aux = nodo_aux->siguiente) != NULL);
 	}
 	glFlush();
+}
+
+void dibujaEjes(void) {
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 1.0f);
+	glEnd();
 }
 
 void cargaObjeto() {
