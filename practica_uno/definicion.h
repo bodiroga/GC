@@ -51,6 +51,14 @@ typedef struct OBJETO{
 } OBJETO;
 
 /*----------------------- CAMARA -----------------------------------------*/
+
+typedef struct camara {
+	punto3d posicion;
+	punto3d pmira;
+	vector3d vup;
+	vector3d vector;
+} camara;
+
 /*----------------------- LUZ -----------------------------------------*/
 /*----------------------- LISTA DE LUCES -----------------------------------------*/
 
