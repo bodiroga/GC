@@ -128,6 +128,8 @@ void dibuja_un_objeto(OBJETO * mi_objeto) {
 		}
 		glEnd();
 	}
+
+	dibujaEjes();
 	glFlush();
 }
 
@@ -145,10 +147,23 @@ void dibuja(void) {
 }
 
 void dibujaEjes(void) {
-	glBegin(GL_LINE_LOOP);
-	glVertex3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 1.0f);
+
+	float valor_ejes = nodo_actual->objeto->max.x;
+	if (valor_ejes > nodo_actual->objeto->max.y) valor_ejes = nodo_actual->objeto->max.y;
+	if (valor_ejes > nodo_actual->objeto->max.z) valor_ejes = nodo_actual->objeto->max.z;
+
+	glBegin(GL_LINES);
+	glColor3f(1, 0, 0);
+	glVertex3f(valor_ejes, 0, 0);
+	glVertex3f(0, 0, 0);
+
+	glColor3f(0, 1, 0);
+	glVertex3f(0, valor_ejes, 0);
+	glVertex3f(0, 0, 0);
+
+	glColor3f(0, 0, 1);
+	glVertex3f(0, 0, valor_ejes);
+	glVertex3f(0, 0, 0);
 	glEnd();
 }
 
