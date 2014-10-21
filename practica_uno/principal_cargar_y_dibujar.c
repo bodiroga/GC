@@ -19,6 +19,8 @@ void escalar(float r);
 void trasladar(float x, float y, float z);
 void rotar(float ang, float x, float y, float z);
 void reset();
+void cambiarModo();
+void cargarCamara();
 
 struct NODO * primer_nodo = NULL ;
 struct NODO * nodo_actual = NULL;
@@ -32,6 +34,7 @@ float	SELECTED_GREEN = 0.0f;
 float	SELECTED_BLUE = 0.0f;
 int		ANCHO = 700, ALTO = 800;
 int		color = 0;
+int		MODO = 0;
 
 static void teclado (unsigned char key, int x, int y) {
 	// This function will be called whenever the user pushes one key
@@ -81,6 +84,9 @@ static void teclado (unsigned char key, int x, int y) {
 		case '0':
 			reset();
 			break;
+		case 'p':
+			cambiarModo();
+			break;
 		case 43: // <+>
 			escalar(1.1f);
 			break;
@@ -111,9 +117,10 @@ void dibuja_un_objeto(OBJETO * mi_objeto) {
 
 	clipping();
 	
-	if ((nodo_actual != NULL) && (mi_objeto == nodo_actual->objeto))
+	if ((nodo_actual != NULL) && (mi_objeto == nodo_actual->objeto)) {
 		glColor3f(SELECTED_RED, SELECTED_GREEN, SELECTED_BLUE);
-	else
+		dibujaEjes();
+	} else
 		glColor3f(LOCAL_RED, LOCAL_GREEN, LOCAL_BLUE);
 
 
@@ -129,7 +136,6 @@ void dibuja_un_objeto(OBJETO * mi_objeto) {
 		glEnd();
 	}
 
-	dibujaEjes();
 	glFlush();
 }
 
@@ -218,6 +224,14 @@ void seleccionaObjeto() {
 	
 }
 
+void cambiarModo() {
+
+	if (MODO == 0)
+		MODO = 1;
+	else
+		MODO = 0;
+}
+
 
 int main(int argc, char** argv) {
 
@@ -227,7 +241,10 @@ int main(int argc, char** argv) {
 	printf("Pulsar <m> para cambiar el color del objeto seleccionado\n");
 	printf("Pulsar <TAB> para seleccionar un objeto\n");
 	printf("Pulsar <ESC> para finalizar\n");
-		
+
+	cargaObjeto();
+	cargarCamara();
+
 	glutInit(&argc,argv);
 	glutInitDisplayMode ( GLUT_RGB );
 	glutInitWindowSize ( ANCHO, ALTO );
