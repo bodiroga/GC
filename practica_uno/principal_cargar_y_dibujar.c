@@ -32,6 +32,7 @@ static float	LOCAL_BLUE = 0.5f;
 float	SELECTED_RED = 1.0f;
 float	SELECTED_GREEN = 0.0f;
 float	SELECTED_BLUE = 0.0f;
+float	near_cam = 0, far_cam = 0;
 int		ANCHO = 700, ALTO = 800;
 int		color = 0;
 int		MODO = 0;
@@ -145,7 +146,15 @@ void dibuja(void) {
 	if (primer_nodo != NULL) {
 		nodo_aux = primer_nodo;
 		do {
-			glLoadMatrixf(nodo_aux->matriz);
+			if (MODO == 0) {
+				glLoadMatrixf(nodo_aux->matriz);
+			} else if (MODO == 1) {
+				glLoadIdentity();
+				gluLookAt(cam->posicion.x, cam->posicion.y, cam->posicion.z,
+						cam->pmira.x, cam->pmira.y, cam->pmira.z,
+						cam->vup.x, cam->vup.y, cam->vup.z);
+				glMultMatrixf(nodo_aux->matriz);
+			}
 			dibuja_un_objeto(nodo_aux->objeto);
 		} while ((nodo_aux = nodo_aux->siguiente) != NULL);
 	}

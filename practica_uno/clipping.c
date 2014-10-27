@@ -38,7 +38,7 @@ void actualizar_medidas_escena(OBJETO * objeto) {
 // min_x, min_y, min_z, max_x, max_y, max_z
 void clipping() {
 
-	float left, right, top, bottom, near, far, near_cam, far_cam, tan_alpha, tan_beta;
+	float left, right, top, bottom, near, far, tan_alpha, tan_beta;
 
 	left = min_x;
 	right = max_x;
