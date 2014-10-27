@@ -38,7 +38,7 @@ void actualizar_medidas_escena(OBJETO * objeto) {
 // min_x, min_y, min_z, max_x, max_y, max_z
 void clipping() {
 
-	float left, right, top, bottom, near, far, tan_alpha, tan_beta;
+	float left, right, top, bottom, near, far, near_cam, far_cam, tan_alpha, tan_beta;
 
 	left = min_x;
 	right = max_x;
@@ -58,9 +58,13 @@ void clipping() {
 		top *= tan_beta/tan_alpha;
 	}
 
-	glMatrixMode(GL_PROJECTION);
+	glMatrixMode(GL_PROJECTION);	// Cambiamos a Proyection para calcular la proyeccion
 	glLoadIdentity();
-	glOrtho(left, right, bottom, top, near, far);
-	glMatrixMode(GL_MODELVIEW);
+	if (MODO == 0) {
+		glOrtho(left, right, bottom, top, near, far);
+	} else {
+		glFrustum(left, right, bottom, top, near_cam, far_cam);
+	}
+	glMatrixMode(GL_MODELVIEW);		// Volvemos a modelview
 
 }

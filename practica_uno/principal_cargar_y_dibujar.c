@@ -68,7 +68,7 @@ static void teclado (unsigned char key, int x, int y) {
 			break;
 		case 'h':
 			rotar(5.0f,1.0f,0.0f,0.0f);
-		break;
+			break;
 		case 't':
 			rotar(5.0f,0.0f,1.0f,0.0f);
 			break;
@@ -118,8 +118,8 @@ void dibuja_un_objeto(OBJETO * mi_objeto) {
 	clipping();
 	
 	if ((nodo_actual != NULL) && (mi_objeto == nodo_actual->objeto)) {
-		glColor3f(SELECTED_RED, SELECTED_GREEN, SELECTED_BLUE);
 		dibujaEjes();
+		glColor3f(SELECTED_RED, SELECTED_GREEN, SELECTED_BLUE);
 	} else
 		glColor3f(LOCAL_RED, LOCAL_GREEN, LOCAL_BLUE);
 
@@ -171,6 +171,7 @@ void dibujaEjes(void) {
 	glVertex3f(0, 0, valor_ejes);
 	glVertex3f(0, 0, 0);
 	glEnd();
+	glFlush();
 }
 
 void cargaObjeto() {
