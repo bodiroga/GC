@@ -21,6 +21,7 @@ void rotar(float ang, float x, float y, float z);
 void reset();
 void cambiarModo();
 void cargarCamara();
+void trasladarCamara(float x, float y, float z);
 
 struct NODO * primer_nodo = NULL ;
 struct NODO * nodo_actual = NULL;
@@ -80,6 +81,24 @@ static void teclado (unsigned char key, int x, int y) {
 			break;
 		case 'y':
 			rotar(5.0f,0.0f,0.0f,-1.0f);
+			break;
+		case 'A':
+			trasladarCamara(-1.0f,0.0f,0.0f);
+			break;
+		case 'D':
+			trasladarCamara(1.0f,0.0f,0.0f);
+			break;
+		case 'W':
+			trasladarCamara(0.0f,1.0f,0.0f);
+			break;
+		case 'S':
+			trasladarCamara(0.0f,-1.0f,0.0f);
+			break;
+		case 'Q':
+			trasladarCamara(0.0f,0.0f,1.0f);
+			break;
+		case 'E':
+			trasladarCamara(0.0f,0.0f,-1.0f);
 			break;
 		case '0':
 			reset();
