@@ -32,7 +32,6 @@ static float	LOCAL_BLUE = 0.5f;
 float	SELECTED_RED = 1.0f;
 float	SELECTED_GREEN = 0.0f;
 float	SELECTED_BLUE = 0.0f;
-float	near_cam = 0, far_cam = 0;
 int		ANCHO = 700, ALTO = 800;
 int		color = 0;
 int		MODO = 0;

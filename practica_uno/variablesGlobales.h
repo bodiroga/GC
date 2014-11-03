@@ -15,7 +15,7 @@ extern int		ANCHO, ALTO, color;
 extern int		MODO;
 extern float	min_x, min_y, min_z, max_x, max_y, max_z;
 extern struct 	NODO * nodo_actual;
-extern float	near_cam, far_cam;
+extern float	nearVal, farVal;
 extern struct	camara * cam;
 
 #endif /* VARIABLEGLOBALES_H_ */
