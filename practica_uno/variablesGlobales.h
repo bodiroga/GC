@@ -17,5 +17,6 @@ extern float	min_x, min_y, min_z, max_x, max_y, max_z;
 extern struct 	NODO * nodo_actual;
 extern float	nearVal, farVal;
 extern struct	camara * cam;
+extern float	factor_zoom;
 
 #endif /* VARIABLEGLOBALES_H_ */

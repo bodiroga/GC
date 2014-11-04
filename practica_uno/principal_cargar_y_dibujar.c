@@ -22,6 +22,7 @@ void reset();
 void cambiarModo();
 void cargarCamara();
 void trasladarCamara(float x, float y, float z);
+void zoomCamara(float factor);
 
 struct NODO * primer_nodo = NULL ;
 struct NODO * nodo_actual = NULL;
@@ -99,6 +100,12 @@ static void teclado (unsigned char key, int x, int y) {
 			break;
 		case 'E':
 			trasladarCamara(0.0f,0.0f,-1.0f);
+			break;
+		case 'z':
+			zoomCamara(0.9f);
+			break;
+		case 'Z':
+			zoomCamara(1.1f);
 			break;
 		case '0':
 			reset();

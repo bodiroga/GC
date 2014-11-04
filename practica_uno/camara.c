@@ -11,6 +11,7 @@
 
 struct 	camara * cam = NULL;
 float	nearVal = 0, farVal = 0;
+float	factor_zoom = 1.0f;
 
 void cargarCamara() {
 
@@ -41,4 +42,18 @@ void trasladarCamara(float x, float y, float z) {
 	cam->pmira.y += y;
 	cam->pmira.z += z;
 
+}
+
+void zoomCamara(float factor) {
+
+	factor_zoom *= factor;
+
+}
+
+void rotarCamara() {
+
+	// Modificamos pmira y/o v_up, sin modificar la posición
+	// Calcular eje de giro -> x_cam(calcularla) dir_mira x v_up
+	// 						-> v_up
+	//						-> dir_mira
 }

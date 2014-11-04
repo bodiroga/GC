@@ -63,7 +63,7 @@ void clipping() {
 	if (MODO == 0) {
 		glOrtho(left, right, bottom, top, near, far);
 	} else {
-		glFrustum(left, right, bottom, top, nearVal, farVal);
+		glFrustum(factor_zoom*left, factor_zoom*right, factor_zoom*bottom, factor_zoom*top, nearVal, farVal);
 	}
 	glMatrixMode(GL_MODELVIEW);		// Volvemos a modelview
 
