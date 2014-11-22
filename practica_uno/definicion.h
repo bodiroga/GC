@@ -57,7 +57,6 @@ typedef struct camara {
 	punto3d pmira;
 	vector3d vup;
 	vector3d vdir;
-	vector3d x_camara;
 } camara;
 
 /*----------------------- LUZ -----------------------------------------*/
