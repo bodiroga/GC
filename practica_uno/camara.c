@@ -14,6 +14,7 @@ struct 	camara * cam = NULL;
 float	nearVal = 0, farVal = 0;
 float	factor_zoom = 1.0f;
 
+
 vector3d mult_matriz_por_vector(float matriz[16], vector3d vector) {
 
 	vector3d resultado;
@@ -52,6 +53,9 @@ void cargarCamara() {
 	cam->vup.x = 0;
 	cam->vup.y = 1;
 	cam->vup.z = 0;
+	cam->vdir.x = cam->posicion.x - cam->pmira.x;
+	cam->vdir.y = cam->posicion.y - cam->pmira.y;
+	cam->vdir.z = cam->posicion.z - cam->pmira.z;
 	nearVal = fondo;
 	farVal = 10*fondo;
 
@@ -77,72 +81,81 @@ void zoomCamara(float factor) {
 
 void rotarCamaraTripode(int xyz) {
 
-	// 1º Calcular matriz de rotacion
-	//		3 opciones: - cambia vup si rotamos sobre z
-	//				 	- cambia dir_mira si rotamos sobre y
-	//					- cambia vup y dir_mira si rotamos sobre x
-	//
-	// vup = G * vup
-	// dir_mira = G * dir_mira
-	//
-	// Caso rotacion x: eje = xc = vup x dir_mira
-	// Caso rotacion y: eje = vup
-	// Caso rotacion z: eje = dir_mira
-	//
-	// Identity
-	// glRotate( ang, eje.x, eje.y, eje.z)
-	// glFloatv( GL_MODELVIEW_MATRIX)
-	//
-	// Tenemos que crear una funcion que nos haga la multiplicacion vectorial y el producto matriz por vector
+	float G[16];
+	vector3d eje;
+	float ang;
 
-	// mult_matriz_por_vector(float matriz[16], vector3d vector) {
-	//
-	// }
-	// 2º Rotar la cámara con la matriz de rotacion
+	if ((xyz == 1) || (xyz == -1)) // Rotación eje z
+		eje = cam->vdir;
+	else if ((xyz == 10) || (xyz == -10)) // Rotación eje y
+		eje = cam->vup;
+	else if ((xyz == 100) || (xyz == -100)) // Rotación eje x
+		eje = mult_vectorial(cam->vdir, cam->vup);
 
-	// No cambiamos la posicion de la camara !!
+	if (xyz > 0) // Rotación positiva
+		ang = 5.0f;
+	else // Rotación negativa
+		ang = -5.0f;
+
+	glLoadIdentity();
+	glRotatef(ang, eje.x, eje.y, eje.z);
+
+	glGetFloatv(GL_MODELVIEW_MATRIX, G);
+
+	if ((xyz == 1) || (xyz == -1)) { // Rotación eje z
+		cam->vup = mult_matriz_por_vector(G, cam->vup);
+	} else if ((xyz == 10) || (xyz == -10)) { // Rotación eje y
+		cam->vdir = mult_matriz_por_vector(G, cam->vdir);
+	} else if ((xyz == 100) || (xyz == -100)) { // Rotación eje x
+		cam->vup = mult_matriz_por_vector(G, cam->vup);
+		cam->vdir = mult_matriz_por_vector(G, cam->vdir);
+	}
+
+	cam->pmira.x = cam->posicion.x - cam->vdir.x;
+	cam->pmira.y = cam->posicion.y - cam->vdir.y;
+	cam->pmira.z = cam->posicion.z - cam->vdir.z;
+
+
+
+}
+
+void rotarCamaraSatelite(int xy) {
 
 	float G[16];
 	vector3d eje;
 	float ang;
-	glGetFloatv(GL_MODELVIEW_MATRIX, G);
 
-	if (xyz == 1) {
-		cam->vup = mult_matriz_por_vector(G, cam->vup);
-		eje = cam->vdir;
-		ang = 5.0f;
-	} else if (xyz == -1) {
-		cam->vup = mult_matriz_por_vector(G, cam->vup);
-		eje = cam->vdir;
-		ang = -5.0f;
-	} else if (xyz == 10) {
-		cam->vdir = mult_matriz_por_vector(G, cam->vdir);
+	if ((xy == 1) || (xy == -1)) // Rotación eje y
 		eje = cam->vup;
+	else if ((xy == 10) || (xy == -10)) // Rotación eje x
+		eje = mult_vectorial(cam->vdir, cam->vup);
+
+	if (xy > 0) // Rotación positiva
 		ang = 5.0f;
-	} else if (xyz == -10) {
-		cam->vdir = mult_matriz_por_vector(G, cam->vdir);
-		eje = cam->vup;
+	else // Rotación negativa
 		ang = -5.0f;
-	} else if (xyz == 100) {
-		cam->vup = mult_matriz_por_vector(G, cam->vup);
-		cam->vdir = mult_matriz_por_vector(G, cam->vdir);
-		eje = mult_vectorial(cam->vup, cam->vdir);
-		ang = 5.0f;
-	} else if (xyz == -100) {
-		cam->vup = mult_matriz_por_vector(G, cam->vup);
-		cam->vdir = mult_matriz_por_vector(G, cam->vdir);
-		eje = mult_vectorial(cam->vup, cam->vdir);
-		ang = -5.0f;
-	}
 
 	glLoadIdentity();
-	glRotate(ang, eje.x, eje.y, eje.z);
-	glFloatv( GL_MODELVIEW_MATRIX);
+	glRotatef(ang, eje.x, eje.y, eje.z);
+	glGetFloatv(GL_MODELVIEW_MATRIX, G);
 
-	// Modificamos pmira y/o v_up, sin modificar la posición
-	// Calcular eje de giro -> x_cam(calcularla) dir_mira x v_up
-	// 						-> v_up
-	//						-> dir_mira
+	if ((xy == 1) || (xy == -1)) { // Rotación eje y
+		cam->vdir = mult_matriz_por_vector(G, cam->vdir);
+	} else if ((xy == 10) || (xy == -10)) { // Rotación eje x
+		cam->vup = mult_matriz_por_vector(G, cam->vup);
+		cam->vdir = mult_matriz_por_vector(G, cam->vdir);
+	}
+
+	cam->posicion.x = cam->pmira.x - cam->vdir.x;
+	cam->posicion.y = cam->pmira.y - cam->vdir.y;
+	cam->posicion.z = cam->pmira.z - cam->vdir.z;
+
+}
+
+void resetCamara() {
+
+	cargarCamara();
+
 }
 
 
