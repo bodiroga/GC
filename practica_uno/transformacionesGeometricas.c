@@ -25,10 +25,19 @@ void trasladar(float x, float y, float z) {
 
 }
 
-void rotar(float ang, float x, float y, float z) {
+void rotarLocal(float ang, float x, float y, float z) {
 
 	glLoadMatrixf(nodo_actual->matriz);
 	glRotatef(ang, x, y, z);
+	glGetFloatv(GL_MODELVIEW_MATRIX, nodo_actual->matriz);
+
+}
+
+void rotarGlobal(float ang, float x, float y, float z) {
+
+	glLoadIdentity();
+	glRotatef(ang, x, y, z);
+	glMultMatrixf(nodo_actual->matriz);
 	glGetFloatv(GL_MODELVIEW_MATRIX, nodo_actual->matriz);
 
 }
