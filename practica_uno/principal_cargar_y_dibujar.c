@@ -17,12 +17,17 @@ void seleccionaObjeto();
 void cambiaColor();
 void escalar(float r);
 void trasladar(float x, float y, float z);
-void rotar(float ang, float x, float y, float z);
+void rotarLocal(float ang, float x, float y, float z);
+void rotarGlobal(float ang, float x, float y, float z);
 void reset();
 void cambiarModo();
 void cargarCamara();
 void trasladarCamara(float x, float y, float z);
 void zoomCamara(float factor);
+void rotarCamaraTripode(int xyz);
+void rotarCamaraSatelite(int xy);
+void resetCamara();
+
 
 struct NODO * primer_nodo = NULL ;
 struct NODO * nodo_actual = NULL;
@@ -41,12 +46,15 @@ int		MODO = 0;
 static void teclado (unsigned char key, int x, int y) {
 	// This function will be called whenever the user pushes one key
 	switch(key) {
+		/////  Cargar objeto  /////
 		case 'c': 
 			cargaObjeto();
 			break;
+		/////  Cambiar color objeto seleccionado  /////
 		case 'm':
 			cambiaColor();
 			break;
+		//////  Trasladar objeto  /////
 		case 'a':
 			trasladar(-1.0f,0.0f,0.0f);
 			break;
@@ -65,24 +73,45 @@ static void teclado (unsigned char key, int x, int y) {
 		case 'e':
 			trasladar(0.0f,0.0f,-1.0f);
 			break;
+		/////  Rotar objeto en local  //////
 		case 'f':
-			rotar(5.0f,-1.0f,0.0f,0.0f);
+			rotarLocal(5.0f,0.0f,-1.0f,0.0f);
 			break;
 		case 'h':
-			rotar(5.0f,1.0f,0.0f,0.0f);
+			rotarLocal(5.0f,0.0f,1.0f,0.0f);
 			break;
 		case 't':
-			rotar(5.0f,0.0f,1.0f,0.0f);
+			rotarLocal(5.0f,-1.0f,0.0f,0.0f);
 			break;
 		case 'g':
-			rotar(5.0f,0.0f,-1.0f,0.0f);
+			rotarLocal(5.0f,1.0f,0.0f,0.0f);
 			break;
 		case 'r':
-			rotar(5.0f,0.0f,0.0f,1.0f);
+			rotarLocal(5.0f,0.0f,0.0f,1.0f);
 			break;
 		case 'y':
-			rotar(5.0f,0.0f,0.0f,-1.0f);
+			rotarLocal(5.0f,0.0f,0.0f,-1.0f);
 			break;
+		//////  Rotar objeto en global  //////
+		case 'F':
+			rotarGlobal(5.0f,0.0f,-1.0f,0.0f);
+			break;
+		case 'H':
+			rotarGlobal(5.0f,0.0f,1.0f,0.0f);
+			break;
+		case 'T':
+			rotarGlobal(5.0f,-1.0f,0.0f,0.0f);
+			break;
+		case 'G':
+			rotarGlobal(5.0f,1.0f,0.0f,0.0f);
+			break;
+		case 'R':
+			rotarGlobal(5.0f,0.0f,0.0f,1.0f);
+			break;
+		case 'Y':
+			rotarGlobal(5.0f,0.0f,0.0f,-1.0f);
+			break;
+		/////  Trasladar camara  //////
 		case 'A':
 			trasladarCamara(-1.0f,0.0f,0.0f);
 			break;
@@ -101,27 +130,69 @@ static void teclado (unsigned char key, int x, int y) {
 		case 'E':
 			trasladarCamara(0.0f,0.0f,-1.0f);
 			break;
+		/////  Zoom camara  /////
 		case 'z':
 			zoomCamara(0.9f);
 			break;
 		case 'Z':
 			zoomCamara(1.1f);
 			break;
+		/////  Rotar camara tripode  /////
+		case 'j':
+			rotarCamaraTripode(10);
+			break;
+		case 'l':
+			rotarCamaraTripode(-10);
+			break;
+		case 'i':
+			rotarCamaraTripode(-100);
+			break;
+		case 'k':
+			rotarCamaraTripode(100);
+			break;
+		case 'u':
+			rotarCamaraTripode(1);
+			break;
+		case 'o':
+			rotarCamaraTripode(-1);
+			break;
+		/////  Rotar camara órbita  /////
+		case 'J':
+			rotarCamaraSatelite(-1);
+			break;
+		case 'L':
+			rotarCamaraSatelite(1);
+			break;
+		case 'I':
+			rotarCamaraSatelite(10);
+			break;
+		case 'K':
+			rotarCamaraSatelite(-10);
+			break;
+		/////  Resetear camara  /////
+		case 'n':
+			resetCamara();
+			break;
+		/////  Resetear objeto  /////
 		case '0':
 			reset();
 			break;
+		/////  Cambiar modo de proyección  /////
 		case 'p':
 			cambiarModo();
 			break;
+		/////  Zoom objeto  /////
 		case 43: // <+>
 			escalar(1.1f);
 			break;
 		case 45: // <->
 			escalar(0.9f);
 			break;
+		/////  Cambiar objeto seleccionado  /////
 		case 9: // <TAB>
 			seleccionaObjeto();
 			break;
+		/////  Salir del programa  /////
 		case 27:  // <ESC>
 			exit(0);
 			break;
@@ -148,7 +219,6 @@ void dibuja_un_objeto(OBJETO * mi_objeto) {
 		glColor3f(SELECTED_RED, SELECTED_GREEN, SELECTED_BLUE);
 	} else
 		glColor3f(LOCAL_RED, LOCAL_GREEN, LOCAL_BLUE);
-
 
 	for (i = 0; i < mi_objeto->numeroCaras; i++) {
 		glBegin(GL_LINE_LOOP);
