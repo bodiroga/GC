@@ -6,7 +6,14 @@ typedef struct NODO {
 				struct OBJETO * objeto;
 				struct NODO * siguiente;
 				float matriz[16];
+				int n_material;
 				} NODO;
+
+typedef struct MATERIAL {
+				float ambiente[4];
+				float difuso[4];
+				float especular[4];
+				} MATERIAL;
 
 typedef struct {
                double x,y,z;
@@ -60,6 +67,13 @@ typedef struct camara {
 } camara;
 
 /*----------------------- LUZ -----------------------------------------*/
+
+typedef struct luz {
+	float ambiente[4];
+	float difuso[4];
+	float especular[4];
+	float posicion[4];
+} luz;
 /*----------------------- LISTA DE LUCES -----------------------------------------*/
 
 #endif // DEFINICION_H

@@ -1,8 +1,8 @@
+#include <GL/glut.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> 
 #include <time.h>
-#include <GL/glut.h>
 #include "definicion.h"
 #include "ruta.h"
 #include "variablesGlobales.h"
@@ -15,6 +15,7 @@ void clipping();
 void cargaObjeto();
 void seleccionaObjeto();
 void cambiaColor();
+void cambiarMaterial();
 void escalar(float r);
 void trasladar(float x, float y, float z);
 void rotarLocal(float ang, float x, float y, float z);
@@ -27,6 +28,7 @@ void zoomCamara(float factor);
 void rotarCamaraTripode(int xyz);
 void rotarCamaraSatelite(int xy);
 void resetCamara();
+void normal_caras(OBJETO *);
 
 
 struct NODO * primer_nodo = NULL ;
@@ -40,7 +42,6 @@ float	SELECTED_RED = 1.0f;
 float	SELECTED_GREEN = 0.0f;
 float	SELECTED_BLUE = 0.0f;
 int		ANCHO = 700, ALTO = 800;
-int		color = 0;
 int		MODO = 0;
 
 static void teclado (unsigned char key, int x, int y) {
@@ -51,7 +52,7 @@ static void teclado (unsigned char key, int x, int y) {
 			cargaObjeto();
 			break;
 		/////  Cambiar color objeto seleccionado  /////
-		case 'm':
+		case 'v':
 			cambiaColor();
 			break;
 		//////  Trasladar objeto  /////
@@ -188,6 +189,19 @@ static void teclado (unsigned char key, int x, int y) {
 		case 45: // <->
 			escalar(0.9f);
 			break;
+		/////  Cambiar material  /////
+		case 'm':
+			cambiarMaterial();
+			break;
+		/////  Iluminación  /////
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
 		/////  Cambiar objeto seleccionado  /////
 		case 9: // <TAB>
 			seleccionaObjeto();
@@ -237,7 +251,14 @@ void dibuja_un_objeto(OBJETO * mi_objeto) {
 
 void dibuja(void) {
 
-	glClear( GL_COLOR_BUFFER_BIT );
+	glEnable(GL_LIGHTING);
+	glEnable(GL_COLOR_MATERIAL);
+	glDisable(GL_COLOR);
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_DEPTH_TEST);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_LIGHT0);
+	glClear( GL_COLOR_BUFFER_BIT);
 	if (primer_nodo != NULL) {
 		nodo_aux = primer_nodo;
 		do {
@@ -313,6 +334,7 @@ void cargaObjeto() {
 			nodo_actual = primer_nodo;
 
 		actualizar_medidas_escena(objeto_aux);
+		normal_caras(objeto_aux);
 
 	} else {
 		objeto_aux = NULL;
@@ -340,8 +362,8 @@ void cambiarModo() {
 
 int main(int argc, char** argv) {
 
-	printf("Este programa carga un objeto \n");
-	printf("y lo dibuja en pantalla \n");
+	printf("Este programa carga varios objetos \n");
+	printf("y los dibuja en pantalla \n");
 	printf("Pulsar <c> para cargar un objeto\n");
 	printf("Pulsar <m> para cambiar el color del objeto seleccionado\n");
 	printf("Pulsar <TAB> para seleccionar un objeto\n");

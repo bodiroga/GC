@@ -6,6 +6,8 @@
  */
 #include "variablesGlobales.h"
 
+int		color = 0;
+
 void cambiaColor() {
 
 	if (color == 7) color = 0; else color++;

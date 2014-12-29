@@ -4,9 +4,7 @@
  *  Created on: 20/10/2014
  *      Author: aitor
  */
-
 #include <GL/glut.h>
-#include "definicion.h"
 #include "variablesGlobales.h"
 
 void escalar(float r) {

@@ -10,34 +10,13 @@
 #include "definicion.h"
 #include <GL/glut.h>
 
+// Cargamos las operaciones necesarias del archivo operaciones.c
+vector3d mult_matriz_por_vector(float matriz[16], vector3d vector);
+vector3d mult_vectorial(vector3d vector1, vector3d vector2);
+
 struct 	camara * cam = NULL;
 float	nearVal = 0, farVal = 0;
 float	factor_zoom = 1.0f;
-
-
-vector3d mult_matriz_por_vector(float matriz[16], vector3d vector) {
-
-	vector3d resultado;
-
-	resultado.x = matriz[0]*vector.x + matriz[4]*vector.y + matriz[8]*vector.z;
-	resultado.y = matriz[1]*vector.x + matriz[5]*vector.y + matriz[9]*vector.z;
-	resultado.z = matriz[2]*vector.x + matriz[6]*vector.y + matriz[10]*vector.z;
-
-	return resultado;
-
-}
-
-vector3d mult_vectorial(vector3d vector1, vector3d vector2) {
-
-	vector3d resultado;
-
-	resultado.x = vector1.y*vector2.z - vector1.z*vector2.y;
-	resultado.y = vector1.z*vector2.x - vector1.x*vector2.z;
-	resultado.z = vector1.x*vector2.y - vector1.y*vector2.x;
-
-	return resultado;
-
-}
 
 void cargarCamara() {
 
